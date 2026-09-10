@@ -1,8 +1,8 @@
 const FLOORSIZE = 7;
 const COLOR = "#7990ec";
 const BILDER = [
-{"drittel":"2. Drittel","points":[{"x":6,"y":-6,"p":1},{"x":6,"y":-4.5,"p":2},{"x":6,"y":-3,"p":3},{"x":6,"y":4.5,"p":4},{"x":6,"y":1.5,"p":5},{"x":6,"y":0,"p":6},{"x":6,"y":3,"p":7},{"x":6,"y":-1.5,"p":8}],"name":"Tango Check 3","tanz":"Tango 3 ","order":"120"}
-{"drittel":"2. Drittel","points":[{"x":6,"y":-6,"p":1},{"x":6,"y":-4.5,"p":2},{"x":6,"y":-3,"p":3},{"x":6,"y":4.5,"p":4},{"x":6,"y":1.5,"p":5},{"x":6,"y":0,"p":6},{"x":6,"y":3,"p":7},{"x":6,"y":-1.5,"p":8}],"name":"Tango Vor Achse","tanz":"Tango 3","order":"130"}
+{"drittel":"2. Drittel","points":[{"x":6,"y":-6,"p":1},{"x":6,"y":-4.5,"p":2},{"x":6,"y":-3,"p":3},{"x":6,"y":4.5,"p":4},{"x":6,"y":1.5,"p":5},{"x":6,"y":0,"p":6},{"x":6,"y":3,"p":7},{"x":6,"y":-1.5,"p":8}],"name":"Tango Check 3","tanz":"Tango 3 ","order":"120"},
+{"drittel":"2. Drittel","points":[{"x":6,"y":-6,"p":1},{"x":6,"y":-4.5,"p":2},{"x":6,"y":-3,"p":3},{"x":6,"y":4.5,"p":4},{"x":6,"y":1.5,"p":5},{"x":6,"y":0,"p":6},{"x":6,"y":3,"p":7},{"x":6,"y":-1.5,"p":8}],"name":"Tango Vor Achse","tanz":"Tango 3","order":"130"},
 {"drittel":"3. Drittel","points":[{"x":-1.5,"y":0,"p":1},{"x":-1.5,"y":-1.5,"p":2},{"x":-3,"y":-1.5,"p":3},{"x":-6,"y":-6,"p":4},{"x":-4.5,"y":-4.5,"p":5},{"x":-4.5,"y":-3,"p":6},{"x":-6,"y":-4.5,"p":7},{"x":-3,"y":-3,"p":8}],"name":"LW Wkisk","tanz":"Langsamer Walzer 1","order":"10"},
 {"drittel":"3. Drittel","points":[{"x":4.5,"y":1.5,"p":1},{"x":6,"y":0,"p":2},{"x":3,"y":3,"p":3},{"x":0,"y":0,"p":4},{"x":1.5,"y":-1.5,"p":5},{"x":3,"y":0,"p":6},{"x":1.5,"y":1.5,"p":7},{"x":4.5,"y":-1.5,"p":8}],"name":"LW Ende Offene Links","tanz":"Langsamer Walzer 1","order":"20"},
 {"drittel":"3. Drittel","points":[{"x":4.5,"y":4.5,"p":1},{"x":6,"y":3,"p":2},{"x":3,"y":6,"p":3},{"x":0,"y":3,"p":4},{"x":1.5,"y":1.5,"p":5},{"x":3,"y":3,"p":6},{"x":1.5,"y":4.5,"p":7},{"x":4.5,"y":1.5,"p":8}],"name":"LW Vienniese Cross Schlag 3","tanz":"Langsamer Walzer 1","order":"30"},
