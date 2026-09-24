@@ -35,7 +35,14 @@ window.onload = function () {
     // Wait for BILDER to be loaded from the other script
     setTimeout(function() {
         // Calculate optimal scale and offset - center the coordinate system
-        while (bw * 1.1 < innerWidth && bh * 1.3 < innerHeight) {
+
+        // size for drawing = size the html canvas element actually has on screen
+        f = Math.max(2, window.devicePixelRatio); // Sometimes returns 1 but result is still blurry -> f at least 2
+        canvas.width = f * canvas.clientWidth;
+        canvas.height = f * canvas.clientHeight;
+
+        // 1.04 is a workaround. what would be better is something that calculates an absolute position s.t. the drawing is actually centered
+        while (bw * 1.04 < canvas.width && bh * 1.04 < canvas.height) {
             offset++;
             scale = offset * 2;
             bw = scale * (2 * FLOORSIZE + 1) + 1 + 2 * offset;
@@ -54,10 +61,6 @@ window.onload = function () {
             onmove(gridToCoord(event.clientX - canvas.offsetLeft), gridToCoord(event.clientY - canvas.offsetTop))
         });
         window.addEventListener('keydown', this.onkey, false);
-
-
-        canvas.setAttribute("height", "" + bh);
-        canvas.setAttribute("width", "" + bw);
 
         refresh();
     }, 500);
