@@ -101,7 +101,9 @@
             border-radius: 8px;
             margin: 20px auto;
             display: block;
-            max-width: min(90vw, 80vh, 60rem);
+
+            width: 100%;
+            aspect-ratio: 1;
         }
 
         /* Autoplay status indicator */
@@ -168,6 +170,8 @@
             display: flex;
             flex-direction: column;
             margin: 20px;
+            width: 100%; /* be as wide as possible */
+            max-width: min(90vw, 70vh, 60rem); /* but not too wide */
         }
 
         @media only screen and (max-width: 992px) { /* Tablets, Handys: Knöpfe unten für angenehmere Bedienbarkeit */
@@ -203,9 +207,11 @@
         </table>
 
         <div id="canvas-div">
-            <canvas id="halle" width="1025" height="1025"></canvas>
+            <canvas id="halle" width="1000" height="1000"></canvas>
         </div>
     </div>
+
+    <div id="dbg"></div>
 
     <div class="flex-grow"></div>
 
