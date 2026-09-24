@@ -1,7 +1,6 @@
 const FLOORSIZE = 7;
 const COLOR = "#7990ec";
 const BILDER = [
-{"drittel":"2. Drittel","points":[{"x":2,"y":1,"p":1},{"x":1.5,"y":1,"p":2},{"x":1.5,"y":-0.5,"p":3},{"x":1.5,"y":-3.5,"p":4},{"x":1.5,"y":-1,"p":5},{"x":1.5,"y":-0.5,"p":6},{"x":1.5,"y":-3.5,"p":7},{"x":1.5,"y":-2,"p":8}],"name":"Rechter Fuß Herr","tanz":"Ende Natural Turn","order":"0"},
 {"drittel":"2. Drittel","points":[{"x":4,"y":1,"p":1},{"x":0,"y":1,"p":2},{"x":0,"y":-0.5,"p":3},{"x":0,"y":-3.5,"p":4},{"x":4,"y":-1,"p":5},{"x":4,"y":-0.5,"p":6},{"x":4,"y":-3.5,"p":7},{"x":0,"y":-2,"p":8}],"name":"2 Schritt Achse","tanz":"WW","order":"0"},
 {"drittel":"2. Drittel","points":[{"x":6,"y":-1.5,"p":1},{"x":3,"y":-1.5,"p":2},{"x":3,"y":-3,"p":3},{"x":3,"y":-6,"p":4},{"x":6,"y":-4.5,"p":5},{"x":6,"y":-3,"p":6},{"x":6,"y":-6,"p":7},{"x":3,"y":-4.5,"p":8}],"name":"Rechter Fuß Herr","tanz":"Ende Natural Turn","order":"10"},
 {"drittel":"2. Drittel","points":[{"x":3,"y":-1.5,"p":1},{"x":0,"y":-1.5,"p":2},{"x":0,"y":-3,"p":3},{"x":0,"y":-6,"p":4},{"x":3,"y":-4.5,"p":5},{"x":3,"y":-3,"p":6},{"x":3,"y":-6,"p":7},{"x":0,"y":-4.5,"p":8}],"name":"Linker Fuß Herr","tanz":"Ende Spin Turn","order":"20"},
