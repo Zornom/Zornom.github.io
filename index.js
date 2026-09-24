@@ -93,7 +93,7 @@ function prevtanz() {
 function nexttanz() {
     inAnimation = false;
     if (current < BILDER.length - 1) {
-        while (current < BILBER.length - 1 && BILDER[current].tanz === BILDER[current + 1].tanz) {
+        while (current < BILDER.length - 1 && BILDER[current].tanz === BILDER[current + 1].tanz) {
             current++;
         }
         if (current < BILDER.length - 1) {
