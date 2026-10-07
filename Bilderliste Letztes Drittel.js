@@ -1,4 +1,4 @@
-const FLOORSIZE = 7;
+const FLOORSIZE = 8;
 const COLOR = "#7990ec";
 const BILDER = [
 {"drittel":"1. Drittel","points":[{"x":0.0,"y":6.0,"p":1},{"x":-1.5,"y":4.5,"p":2},{"x":-3.0,"y":3.0,"p":3},{"x":-1.5,"y":7.5,"p":4},{"x":-6.0,"y":6.0,"p":5},{"x":-4.5,"y":4.5,"p":6},{"x":-3.0,"y":6.0,"p":7},{"x":-4.5,"y":7.5,"p":8}],"name":"Start","tanz":"Tango 1","order":"0"},
