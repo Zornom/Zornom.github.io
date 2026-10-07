@@ -243,7 +243,7 @@ class PointSelector:
         def do_save():
             data = {
                 "drittel": drittel_var.get(),
-                "points": [{"x": pt["x"], "y": pt["y"], "p": pt["p"]} for pt in self.points],
+                "points": [{"x": pt["x"]×-1, "y": pt["y"], "p": pt["p"]} for pt in self.points],
                 "name": name_var.get(),
                 "tanz": tanz_var.get(),
                 "order": order_var.get()
