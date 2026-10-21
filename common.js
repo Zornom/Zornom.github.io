@@ -95,7 +95,7 @@ function drawFloor(context){
 
         // Draw thick grid lines
         context.strokeStyle = gridColor;
-        context.lineWidth = 1;
+        context.lineWidth = 2;
         
         context.beginPath();
         context.moveTo(0.5 + coordToGrid(i), 0 + offset);
@@ -109,6 +109,7 @@ function drawFloor(context){
 
         // Draw thin grid lines between major lines (except at boundaries)
         if (i < FLOORSIZE) {
+            context.lineWidth = 1;
             const midX = (coordToGrid(i) + coordToGrid(i+1)) / 2;
             context.beginPath();
             context.moveTo(0.5 + midX, 0 + offset);
@@ -128,24 +129,24 @@ function drawFloor(context){
     const originY = coordToGrid(0);
     
     context.strokeStyle = '#ff6b6b';
-    context.lineWidth = 2;
+    context.lineWidth = 4;
     
     context.beginPath();
-    context.moveTo(originX - 5, originY);
-    context.lineTo(originX + 5, originY);
+    context.moveTo(originX - 10, originY);
+    context.lineTo(originX + 10, originY);
     context.stroke();
 
     context.beginPath();
-    context.moveTo(originX, originY - 5);
-    context.lineTo(originX, originY + 5);
+    context.moveTo(originX, originY - 10);
+    context.lineTo(originX, originY + 10);
     context.stroke();
 
     // Draw origin label
-    context.font = (textsize * 0.8) + "px Cambria";
+    context.font = (textsize) + "px Cambria";
     context.fillStyle = '#ff6b6b';
     context.fillText('0', originX, originY - 10);
 
-
+    // zero lines
     context.beginPath();
     context.moveTo(0.5 + coordToGrid(0), 0 + offset);
     context.lineTo(0.5 + coordToGrid(0), bh - offset);
@@ -153,21 +154,35 @@ function drawFloor(context){
     context.moveTo(0 + offset, 0.5 + coordToGrid(0));
     context.lineTo(bw - offset, 0.5 + coordToGrid(0));
 
-
-    context.strokeStyle = gridThinColor;
-    context.lineWidth = 1;
+    context.strokeStyle = '#ff6b6b';
+    context.lineWidth = 2;
     context.stroke();
-
-
 }
 
 function drawBoard() {
+    let xModifier = 1;
+    let yModifier = 1;
+
     const context = canvas.getContext("2d");
     drawFloor(context)
 
+    drawFrontmarker(context, xModifier, yModifier);
+
     for (let pointsKey = 0; pointsKey < numPositions; pointsKey++) {
-        drawPoint(context, points[pointsKey]);
+        let point = {...points[pointsKey]}; // shallow copy s.t. we do not modify the original x and y
+        point.x = xModifier * point.x;
+        point.y = yModifier * point.y
+        drawPoint(context, point);
     }
+}
+
+function drawFrontmarker(context, xModifier, yModifier) {
+    context.beginPath();
+    context.moveTo(coordToGrid(xModifier * -1.5), coordToGrid(yModifier * (FLOORSIZE + 0.25)));
+    context.lineTo(coordToGrid(xModifier *  1.5), coordToGrid(yModifier * (FLOORSIZE + 0.25)));
+    context.strokeStyle = '#d7af4f';
+    context.lineWidth = 6;
+    context.stroke();
 }
 
 function drawPoint(context, point) {
