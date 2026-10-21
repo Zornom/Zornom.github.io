@@ -144,23 +144,38 @@
         }
 
         /* Theme button - fixed at bottom right */
-        #theme-button {
-            align-self: flex-end;
-            margin: 20px;
-
+        #bottom-bar > * {
             background-color: var(--teamcolor);
             color: white;
             padding: 10px 16px;
-            border-radius: 8px;
             cursor: pointer;
             font-size: 0.95em;
             z-index: 100;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             transition: opacity 0.2s;
+            user-select: none;
         }
 
-        #theme-button:hover {
+        #bottom-bar > :first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        #bottom-bar > :last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        #bottom-bar > :hover {
             opacity: 0.9;
+        }
+
+        #bottom-bar {
+            align-self: flex-end;
+            margin: 20px;
+
+            display: flex;
+            flex-direction: row;
         }
 
         #bildname {
@@ -183,6 +198,11 @@
 
         .flex-grow {
             flex-grow: 1;
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
         }
 
     </style>
@@ -224,9 +244,18 @@
 -->
 
     <!-- Theme button - fixed at bottom right -->
-    <button onclick="toggleThemeDropdown()" id="theme-button">
-        <i class="fa fa-palette"></i> Theme: <span id="current-theme">Light</span>
-    </button>
+
+    <div id="bottom-bar">
+        <button onclick="toggleThemeDropdown()" id="theme-button">
+            <i class="fa fa-palette"></i> Theme: <span id="current-theme">Light</span>
+        </button>
+        <div class="flex-center">
+            <input type="checkbox"
+                   name="invert-positions"
+                   id="invert-positions">
+            <label for="invert-positions">Invertieren</label>
+        </div>
+    </div>
 
     <!-- Theme dropdown -->
     <div id="theme-dropdown-content" style="display:none; position:fixed; top:auto; bottom:100px; right:60px; background:white; border:1px solid #ccc; padding:10px; border-radius:4px; z-index:101;">
@@ -287,6 +316,13 @@
                 dropdownContent.style.display = 'none';
             }
         });
+
+        let invertElem = document.getElementById("invert-positions");
+        setInvertPositions(invertElem.checked);
+        invertElem.onchange = (event) => {
+            setInvertPositions(event.target.checked);
+            refresh();
+        }
     </script>
 </body>
 </html>

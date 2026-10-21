@@ -12,6 +12,8 @@ let rectHeight;
 let rectWidth;
 let noclear = false;
 
+let invertPositions = false;
+
 function next() {
     if (current < BILDER.length - 1) {
         current++;
@@ -160,8 +162,8 @@ function drawFloor(context){
 }
 
 function drawBoard() {
-    let xModifier = 1;
-    let yModifier = 1;
+    let xModifier = invertPositions ? -1 : 1;
+    let yModifier = xModifier;
 
     const context = canvas.getContext("2d");
     drawFloor(context)
@@ -240,4 +242,8 @@ function coordToGrid(c) {
 
 function snap(p) {
     return Math.round(p / snapto) * snapto;
+}
+
+function setInvertPositions(value) {
+    invertPositions = value;
 }
