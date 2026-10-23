@@ -12,6 +12,8 @@ let rectHeight;
 let rectWidth;
 let noclear = false;
 
+let invertPositions = false;
+
 function next() {
     if (current < BILDER.length - 1) {
         current++;
@@ -35,7 +37,14 @@ window.onload = function () {
     // Wait for BILDER to be loaded from the other script
     setTimeout(function() {
         // Calculate optimal scale and offset - center the coordinate system
-        while (bw * 1.1 < innerWidth && bh * 1.3 < innerHeight) {
+
+        // size for drawing = size the html canvas element actually has on screen
+        f = Math.max(2, window.devicePixelRatio); // Sometimes returns 1 but result is still blurry -> f at least 2
+        canvas.width = f * canvas.clientWidth;
+        canvas.height = f * canvas.clientHeight;
+
+        // 1.04 is a workaround. what would be better is something that calculates an absolute position s.t. the drawing is actually centered
+        while (bw * 1.04 < canvas.width && bh * 1.04 < canvas.height) {
             offset++;
             scale = offset * 2;
             bw = scale * (2 * FLOORSIZE + 1) + 1 + 2 * offset;
@@ -54,10 +63,6 @@ window.onload = function () {
             onmove(gridToCoord(event.clientX - canvas.offsetLeft), gridToCoord(event.clientY - canvas.offsetTop))
         });
         window.addEventListener('keydown', this.onkey, false);
-
-
-        canvas.setAttribute("height", "" + bh);
-        canvas.setAttribute("width", "" + bw);
 
         refresh();
     }, 500);
@@ -92,7 +97,7 @@ function drawFloor(context){
 
         // Draw thick grid lines
         context.strokeStyle = gridColor;
-        context.lineWidth = 1;
+        context.lineWidth = 2;
         
         context.beginPath();
         context.moveTo(0.5 + coordToGrid(i), 0 + offset);
@@ -106,6 +111,7 @@ function drawFloor(context){
 
         // Draw thin grid lines between major lines (except at boundaries)
         if (i < FLOORSIZE) {
+            context.lineWidth = 1;
             const midX = (coordToGrid(i) + coordToGrid(i+1)) / 2;
             context.beginPath();
             context.moveTo(0.5 + midX, 0 + offset);
@@ -125,24 +131,24 @@ function drawFloor(context){
     const originY = coordToGrid(0);
     
     context.strokeStyle = '#ff6b6b';
-    context.lineWidth = 2;
+    context.lineWidth = 4;
     
     context.beginPath();
-    context.moveTo(originX - 5, originY);
-    context.lineTo(originX + 5, originY);
+    context.moveTo(originX - 10, originY);
+    context.lineTo(originX + 10, originY);
     context.stroke();
 
     context.beginPath();
-    context.moveTo(originX, originY - 5);
-    context.lineTo(originX, originY + 5);
+    context.moveTo(originX, originY - 10);
+    context.lineTo(originX, originY + 10);
     context.stroke();
 
     // Draw origin label
-    context.font = (textsize * 0.8) + "px Cambria";
+    context.font = (textsize) + "px Cambria";
     context.fillStyle = '#ff6b6b';
     context.fillText('0', originX, originY - 10);
 
-
+    // zero lines
     context.beginPath();
     context.moveTo(0.5 + coordToGrid(0), 0 + offset);
     context.lineTo(0.5 + coordToGrid(0), bh - offset);
@@ -150,21 +156,35 @@ function drawFloor(context){
     context.moveTo(0 + offset, 0.5 + coordToGrid(0));
     context.lineTo(bw - offset, 0.5 + coordToGrid(0));
 
-
-    context.strokeStyle = gridThinColor;
-    context.lineWidth = 1;
+    context.strokeStyle = '#ff6b6b';
+    context.lineWidth = 2;
     context.stroke();
-
-
 }
 
 function drawBoard() {
+    let xModifier = invertPositions ? -1 : 1;
+    let yModifier = xModifier;
+
     const context = canvas.getContext("2d");
     drawFloor(context)
 
+    drawFrontmarker(context, xModifier, yModifier);
+
     for (let pointsKey = 0; pointsKey < numPositions; pointsKey++) {
-        drawPoint(context, points[pointsKey]);
+        let point = {...points[pointsKey]}; // shallow copy s.t. we do not modify the original x and y
+        point.x = xModifier * point.x;
+        point.y = yModifier * point.y
+        drawPoint(context, point);
     }
+}
+
+function drawFrontmarker(context, xModifier, yModifier) {
+    context.beginPath();
+    context.moveTo(coordToGrid(xModifier * -1.5), coordToGrid(yModifier * (FLOORSIZE + 0.25)));
+    context.lineTo(coordToGrid(xModifier *  1.5), coordToGrid(yModifier * (FLOORSIZE + 0.25)));
+    context.strokeStyle = '#d7af4f';
+    context.lineWidth = 6;
+    context.stroke();
 }
 
 function drawPoint(context, point) {
@@ -222,4 +242,8 @@ function coordToGrid(c) {
 
 function snap(p) {
     return Math.round(p / snapto) * snapto;
+}
+
+function setInvertPositions(value) {
+    invertPositions = value;
 }
