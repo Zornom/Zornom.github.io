@@ -185,7 +185,10 @@ function drawBoard() {
     for (let pointsKey = 0; pointsKey < numPositions; pointsKey++) {
         let point = {...points[pointsKey]}; // shallow copy s.t. we do not modify the original x and y
         point.x = xModifier * point.x;
-        point.y = yModifier * point.y
+        point.y = yModifier * point.y;
+        // Mirror the woman's position too (only set when men and women are separated)
+        if (point.dx !== undefined) point.dx = xModifier * point.dx;
+        if (point.dy !== undefined) point.dy = yModifier * point.dy;
         drawPoint(context, point);
         drawnPoints.push(point);
     }
