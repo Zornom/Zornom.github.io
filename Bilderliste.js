@@ -73,5 +73,25 @@ const BILDER = [
 {"drittel":"3. Drittel","points":[{"x":4.5,"y":-4,"p":1},{"x":3,"y":-5.5,"p":2},{"x":0,"y":-2.5,"p":3},{"x":1.5,"y":-7,"p":4},{"x":1.5,"y":-4,"p":5},{"x":0,"y":-5.5,"p":6},{"x":-1.5,"y":-4,"p":7},{"x":3,"y":-2.5,"p":8}],"name":"SF Ende Running Finish","tanz":"Slowfox 2","order":"360"},
 {"drittel":"3. Drittel","points":[{"x":-1.5,"y":-7,"p":1},{"x":-3,"y":-7,"p":2},{"x":-6,"y":-2.5,"p":3},{"x":-4.5,"y":-7,"p":4},{"x":-4.5,"y":-4,"p":5},{"x":-6,"y":-7,"p":6},{"x":-6,"y":-4.75,"p":7},{"x":-3,"y":-5.5,"p":8}],"name":"TG Anfang","tanz":"Tango 3","order":"370"},
 {"drittel":"3. Drittel","points":[{"x":4.5,"y":-4.5,"p":1},{"x":3,"y":-3,"p":2},{"x":-1.5,"y":-1.5,"p":3},{"x":0,"y":-3,"p":4},{"x":0,"y":0,"p":5},{"x":-4.5,"y":-4.5,"p":6},{"x":-3,"y":-3,"p":7},{"x":1.5,"y":-1.5,"p":8}],"name":"TG Abgecheckt","tanz":"Tango 3","order":"380"},
-{"drittel":"3. Drittel","points":[{"x":4.5,"y":1.5,"p":1},{"x":3,"y":3,"p":2},{"x":-1.5,"y":4.5,"p":3},{"x":0,"y":3,"p":4},{"x":0,"y":6,"p":5},{"x":-4.5,"y":1.5,"p":6},{"x":-3,"y":3,"p":7},{"x":1.5,"y":4.5,"p":8}],"name":"TG Contra Check","tanz":"Tango 3","order":"390"}
+{"drittel":"3. Drittel","points":[{"x":4.5,"y":1.5,"p":1},{"x":3,"y":3,"p":2},{"x":-1.5,"y":4.5,"p":3},{"x":0,"y":3,"p":4},{"x":0,"y":6,"p":5},{"x":-4.5,"y":1.5,"p":6},{"x":-3,"y":3,"p":7},{"x":1.5,"y":4.5,"p":8}],"name":"TG Contra Check","tanz":"Tango 3","order":"390"},
+{"drittel":"1. Drittel","points":[{"x":-4.5,"y":-6,"dx":-4.5,"dy":-3,"p":1},{"x":-1.5,"y":-6,"dx":-1.5,"dy":-3,"p":2},{"x":1.5,"y":-6,"dx":1.5,"dy":-3,"p":3},{"x":4.5,"y":-6,"dx":4.5,"dy":-3,"p":4},{"x":-4.5,"y":3,"dx":-4.5,"dy":6,"p":5},{"x":-1.5,"y":3,"dx":-1.5,"dy":6,"p":6},{"x":1.5,"y":3,"dx":1.5,"dy":6,"p":7},{"x":4.5,"y":3,"dx":4.5,"dy":6,"p":8}],"name":"Beispiel: Herren und Damen getrennt","tanz":"Tango 1","order":"400"}
 ]
+
+/*
+ * BEISPIEL: Herren und Damen getrennt darstellen
+ *
+ * Normal steht ein Paar zusammen:   {"x":1.5,"y":-6,"p":3}
+ *   -> eine Raute in der Teamfarbe.
+ *
+ * Getrennt: "dx"/"dy" ergänzen      {"x":1.5,"y":-6,"dx":1.5,"dy":-3,"p":3}
+ *   -> x/y   = Herr (blaue Raute)
+ *   -> dx/dy = Dame (rote Raute)
+ *
+ * Es können alle 8 Paare oder nur einzelne getrennt werden. Paare ohne dx/dy
+ * bleiben eine Raute. Die Koordinaten-Tabelle zeigt dann "Herr x/y" und "Dame x/y".
+ *
+ * Zum Verwenden die folgende Zeile oben in das BILDER-Array kopieren
+ * (an der richtigen Stelle, mit Komma am Ende wie die anderen Zeilen):
+ *
+
+ */

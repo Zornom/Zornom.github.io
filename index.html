@@ -196,6 +196,72 @@
             }
         }
 
+        /* Coordinate table below the floor */
+        #coord-panel {
+            margin-bottom: 20px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .coord-hint {
+            font-size: 0.85em;
+            opacity: 0.7;
+            text-align: center;
+        }
+
+        .coord-table {
+            border: 2px solid var(--teamcolor);
+            background-color: var(--canvas-bg);
+            table-layout: fixed; /* equal column widths */
+        }
+
+        /* Only one position shown: compact table, centered */
+        .coord-table.single {
+            width: auto;
+            min-width: 12rem;
+            margin: 0 auto;
+        }
+
+        .coord-table th,
+        .coord-table td {
+            padding: 4px 6px;
+            text-align: center;
+            border: 1px solid var(--grid-thin);
+        }
+
+        .coord-table thead th {
+            background-color: var(--teamcolor);
+            color: white;
+        }
+
+        /* Row labels (Position, x, y) */
+        .coord-table th[scope="row"] {
+            text-align: left;
+            white-space: nowrap;
+            width: 5.5em;
+        }
+
+        /* Row labels for separated men (blue) / women (red) */
+        .coord-table tr.men th[scope="row"] {
+            background-color: var(--teamcolor);
+            color: white;
+        }
+
+        .coord-table tr.women th[scope="row"] {
+            background-color: #e0525a;
+            color: white;
+        }
+
+        .coord-table .highlighted {
+            background-color: #ff8c00;
+            color: white;
+            font-weight: bold;
+        }
+
+        .coord-table thead th.highlighted {
+            background-color: #ff8c00;
+        }
+
+
         .flex-grow {
             flex-grow: 1;
         }
@@ -229,6 +295,7 @@
 
         <div id="canvas-div">
             <canvas id="halle" width="1000" height="1000"></canvas>
+            <div id="coord-panel"></div>
         </div>
     </div>
 
@@ -254,6 +321,18 @@
                    name="invert-positions"
                    id="invert-positions">
             <label for="invert-positions">Invertieren</label>
+        </div>
+        <div class="flex-center">
+            <label for="highlight-position">Position:&nbsp;</label>
+            <select name="highlight-position" id="highlight-position">
+                <option value="">–</option>
+            </select>
+        </div>
+        <div class="flex-center">
+            <input type="checkbox"
+                   name="show-all-coords"
+                   id="show-all-coords">
+            <label for="show-all-coords">Alle Koordinaten</label>
         </div>
     </div>
 
@@ -322,6 +401,28 @@
         invertElem.onchange = (event) => {
             setInvertPositions(event.target.checked);
             refresh();
+        }
+
+        // Dropdown to highlight one position number in all pictures
+        let highlightElem = document.getElementById("highlight-position");
+        for (let i = 1; i <= numPositions; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.innerText = i;
+            highlightElem.appendChild(option);
+        }
+        highlightElem.onchange = (event) => {
+            const value = event.target.value;
+            setHighlightedPosition(value === "" ? null : Number(value));
+            if (scale > 0) drawBoard(); // redraw only once the canvas is set up
+        }
+
+        // Toggle to list the coordinates of all positions next to the floor
+        let showAllElem = document.getElementById("show-all-coords");
+        setShowAllCoords(showAllElem.checked);
+        showAllElem.onchange = (event) => {
+            setShowAllCoords(event.target.checked);
+            if (scale > 0) drawBoard();
         }
     </script>
 </body>

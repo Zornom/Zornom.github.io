@@ -14,6 +14,17 @@ let noclear = false;
 
 let invertPositions = false;
 
+// Position number to highlight in every picture (null = none)
+let highlightedPosition = null;
+const HIGHLIGHT_COLOR = "#ff8c00";
+
+// Colors when men and women stand separately (point has dx/dy)
+const MEN_COLOR = COLOR;          // blue team color
+const WOMEN_COLOR = "#e0525a";    // red
+
+// Show the coordinates of all positions next to the floor
+let showAllCoords = false;
+
 function next() {
     if (current < BILDER.length - 1) {
         current++;
@@ -170,12 +181,94 @@ function drawBoard() {
 
     drawFrontmarker(context, xModifier, yModifier);
 
+    let drawnPoints = [];
     for (let pointsKey = 0; pointsKey < numPositions; pointsKey++) {
         let point = {...points[pointsKey]}; // shallow copy s.t. we do not modify the original x and y
         point.x = xModifier * point.x;
         point.y = yModifier * point.y
         drawPoint(context, point);
+        drawnPoints.push(point);
     }
+
+    updateCoordPanel(drawnPoints);
+}
+
+// Format a coordinate for display: no "-0", and a real minus sign
+function formatCoord(value) {
+    const rounded = Math.round(value * 100) / 100;
+    if (rounded === 0) return "0";
+    return rounded < 0 ? "−" + Math.abs(rounded) : String(rounded);
+}
+
+function isSplit(point) {
+    return point.dx !== undefined && point.dy !== undefined && (point.dx !== point.x || point.dy !== point.y);
+}
+
+// Builds one table row: a header cell followed by one cell per point
+function coordTableRow(label, shown, cellText, isHeader, rowClass) {
+    const row = document.createElement("tr");
+    if (rowClass) row.className = rowClass;
+
+    const head = document.createElement("th");
+    head.scope = "row";
+    head.innerText = label;
+    row.appendChild(head);
+
+    for (const point of shown) {
+        const cell = document.createElement(isHeader ? "th" : "td");
+        if (isHeader) cell.scope = "col";
+        if (isHighlighted(point)) cell.className = "highlighted";
+        cell.innerText = cellText(point);
+        row.appendChild(cell);
+    }
+    return row;
+}
+
+// Table below the floor: one column per position, rows for x and y.
+// Shows the highlighted position, or all of them if "Alle Koordinaten" is ticked.
+function updateCoordPanel(drawnPoints) {
+    const panel = document.getElementById("coord-panel");
+    if (!panel) return;
+
+    const sorted = [...drawnPoints].sort((a, b) => a.p - b.p);
+    const shown = showAllCoords
+        ? sorted
+        : sorted.filter(point => isHighlighted(point));
+
+    panel.innerHTML = "";
+
+    if (shown.length === 0) {
+        const hint = document.createElement("div");
+        hint.className = "coord-hint";
+        hint.innerText = "Position wählen oder „Alle Koordinaten“ aktivieren, um Koordinaten anzuzeigen";
+        panel.appendChild(hint);
+        return;
+    }
+
+    const table = document.createElement("table");
+    table.className = "coord-table" + (shown.length === 1 ? " single" : "");
+
+    const thead = document.createElement("thead");
+    thead.appendChild(coordTableRow("Position", shown, point => point.p, true));
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    if (shown.some(isSplit)) {
+        // Men and women separated: own rows for each. A couple standing together
+        // has the same coordinates in both.
+        const womanX = point => formatCoord(isSplit(point) ? point.dx : point.x);
+        const womanY = point => formatCoord(isSplit(point) ? point.dy : point.y);
+        tbody.appendChild(coordTableRow("Herr x", shown, point => formatCoord(point.x), false, "men"));
+        tbody.appendChild(coordTableRow("Herr y", shown, point => formatCoord(point.y), false, "men"));
+        tbody.appendChild(coordTableRow("Dame x", shown, womanX, false, "women"));
+        tbody.appendChild(coordTableRow("Dame y", shown, womanY, false, "women"));
+    } else {
+        tbody.appendChild(coordTableRow("x", shown, point => formatCoord(point.x)));
+        tbody.appendChild(coordTableRow("y", shown, point => formatCoord(point.y)));
+    }
+    table.appendChild(tbody);
+
+    panel.appendChild(table);
 }
 
 function drawFrontmarker(context, xModifier, yModifier) {
@@ -187,17 +280,30 @@ function drawFrontmarker(context, xModifier, yModifier) {
     context.stroke();
 }
 
+// Draws one couple. Without dx/dy the couple stands together (one diamond in the team color).
+// With dx/dy the couple is separated: man at x/y (blue), woman at dx/dy (red).
 function drawPoint(context, point) {
-    if(point.dx !== undefined && point.dy !== undefined && (point.dx !== point.x || point.dy !== point.y)){
-        var rectX = coordToGrid(point.dx);
-        var rectY = coordToGrid(point.dy);
-        drawMan(context, point)
+    const highlighted = isHighlighted(point);
+
+    if (isSplit(point)) {
+        // Keep the man/woman colors when highlighted, the ring marks the selection
+        drawDiamond(context, point.x, point.y, point.p, MEN_COLOR, highlighted);
+        drawDiamond(context, point.dx, point.dy, point.p, WOMEN_COLOR, highlighted);
     } else {
-        var rectX = coordToGrid(point.x);
-        var rectY = coordToGrid(point.y);
+        drawDiamond(context, point.x, point.y, point.p, highlighted ? HIGHLIGHT_COLOR : COLOR, highlighted);
+    }
+}
+
+// Diamond with the position number in it, at floor coordinates (x, y)
+function drawDiamond(context, x, y, label, color, highlighted) {
+    const rectX = coordToGrid(x);
+    const rectY = coordToGrid(y);
+
+    if (highlighted) {
+        drawHighlightRing(context, rectX, rectY, rectWidth, rectHeight);
     }
 
-    context.fillStyle = COLOR;
+    context.fillStyle = color;
     context.beginPath();
     context.moveTo(rectX - rectWidth, rectY);
     context.lineTo(rectX, rectY - rectHeight);
@@ -209,26 +315,7 @@ function drawPoint(context, point) {
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillStyle = "white";
-    context.fillText(point.p, rectX, rectY);
-}
-
-function drawMan(context, point) {
-    var rectX = coordToGrid(point.x);
-    var rectY = coordToGrid(point.y);
-    context.fillStyle = "#073642"; // Darker man figure for better visibility
-
-    context.beginPath();
-    context.moveTo(rectX - rectWidth * .7, rectY);
-    context.lineTo(rectX, rectY - rectHeight * .7);
-    context.lineTo(rectX + rectWidth * .7, rectY);
-    context.lineTo(rectX, rectY + rectHeight * .7);
-    context.fill();
-
-    context.font = (textsize * .7) + "px Cambria";
-    context.textAlign = "center";
-    context.textBaseline = "middle";
-    context.fillStyle = "white";
-    context.fillText(point.p, rectX, rectY);
+    context.fillText(label, rectX, rectY);
 }
 
 
@@ -246,4 +333,30 @@ function snap(p) {
 
 function setInvertPositions(value) {
     invertPositions = value;
+}
+
+function setHighlightedPosition(value) {
+    highlightedPosition = value;
+}
+
+function setShowAllCoords(value) {
+    showAllCoords = value;
+}
+
+function isHighlighted(point) {
+    return highlightedPosition !== null && point.p == highlightedPosition;
+}
+
+// Thick outline around a diamond so the selected position stands out
+function drawHighlightRing(context, x, y, w, h) {
+    const grow = 1.6;
+    context.beginPath();
+    context.moveTo(x - w * grow, y);
+    context.lineTo(x, y - h * grow);
+    context.lineTo(x + w * grow, y);
+    context.lineTo(x, y + h * grow);
+    context.closePath();
+    context.strokeStyle = HIGHLIGHT_COLOR;
+    context.lineWidth = Math.max(3, offset / 5);
+    context.stroke();
 }
