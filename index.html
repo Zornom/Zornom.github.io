@@ -103,6 +103,7 @@
             margin: 20px auto;
             display: block;
 
+            box-sizing: border-box; /* border stays inside the width, no overflow */
             width: 100%;
             aspect-ratio: 1;
         }
@@ -271,6 +272,147 @@
             align-items: center;
         }
 
+        /* Handy hochkant: alles untereinander, volle Breite, Leiste als 2x2-Raster */
+        @media only screen and (max-width: 600px) {
+            #content {
+                margin: 8px;
+                max-width: min(100vw - 16px, 60dvh);
+            }
+
+            #halle {
+                margin: 0 0 8px;
+            }
+
+            #coord-panel {
+                margin-bottom: 4px;
+            }
+
+            td.l, td.r {
+                padding: 2px 0;
+            }
+
+            .btn {
+                min-width: 44px;
+                min-height: 38px;
+                padding: 6px 12px;
+            }
+
+            .coord-table {
+                font-size: 0.8rem;
+            }
+
+            .coord-table th,
+            .coord-table td {
+                padding: 3px 1px;
+            }
+
+            .coord-table th[scope="row"] {
+                width: 4.6em;
+                padding-left: 4px;
+            }
+        }
+
+        /* Handy quer: Boden links, alles andere rechts daneben */
+        @media only screen and (max-height: 500px) and (orientation: landscape) {
+            #content {
+                --floor-size: calc(100dvh - 16px);
+                display: grid;
+                grid-template-columns: var(--floor-size) 1fr;
+                grid-template-rows: auto 1fr;
+                column-gap: 8px;
+                box-sizing: border-box;
+                margin: 0;
+                padding: 8px;
+                max-width: none;
+            }
+
+            #canvas-div {
+                display: contents;
+            }
+
+            #halle {
+                grid-column: 1;
+                grid-row: 1 / span 2;
+                margin: 0;
+            }
+
+            #content > table {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            #coord-panel {
+                grid-column: 2;
+                grid-row: 2;
+                margin: 4px 0 0;
+            }
+
+            td.l, td.r {
+                padding: 2px 0;
+            }
+
+            .btn {
+                min-width: 44px;
+                min-height: 34px;
+                padding: 4px 12px;
+            }
+
+            .coord-table {
+                font-size: 0.7rem;
+            }
+
+            .coord-table th,
+            .coord-table td {
+                padding: 1px;
+            }
+
+            .coord-table th[scope="row"] {
+                width: 4.6em;
+                padding-left: 4px;
+            }
+
+            #bottom-bar {
+                position: fixed;
+                left: 100dvh;
+                right: 8px;
+                bottom: 8px;
+                margin: 0 !important;
+            }
+        }
+
+        /* Leiste gemeinsam für Handy hoch und quer */
+        @media only screen and (max-width: 600px), only screen and (max-height: 500px) and (orientation: landscape) {
+            #bottom-bar {
+                align-self: stretch;
+                margin: 8px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1px;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            }
+
+            #bottom-bar > * {
+                border: none;
+                border-radius: 0 !important;
+                box-shadow: none;
+                box-sizing: border-box;
+                min-height: 40px;
+                padding: 4px 6px;
+                font-size: 0.85rem;
+                font-family: inherit;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                white-space: nowrap;
+            }
+
+            #theme-dropdown-content {
+                right: 8px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -361,6 +503,10 @@
             };
             document.getElementById('current-theme').innerText = themeNames[theme] || theme;
             localStorage.setItem('theme', theme);
+
+            // Close the menu and repaint the floor in the new colors
+            document.getElementById('theme-dropdown-content').style.display = 'none';
+            if (scale > 0) drawBoard();
         }
 
         // Load saved theme or default to light

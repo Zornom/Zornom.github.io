@@ -2,6 +2,7 @@ let scale = 0;
 // Box width
 let offset = 0;
 let textsize = 0;
+let pointTextsize = 0;
 
 let snapto = 0.5;
 let numPositions = 8;
@@ -62,8 +63,11 @@ window.onload = function () {
             bh = scale * (2 * FLOORSIZE + 1) + 1 + 2 * offset;
         }
         textsize = Math.ceil(offset / 1.2);
-        rectHeight = offset/1.8;
-        rectWidth = offset/1.8;
+        // On small screens make the points bigger so the numbers stay readable
+        const pointScale = canvas.clientWidth < 500 ? 1.5 : 1;
+        rectHeight = pointScale * offset/1.8;
+        rectWidth = pointScale * offset/1.8;
+        pointTextsize = pointScale * textsize;
 
 // Listen for mouse moves
         canvas.addEventListener('click', function (event) {
@@ -83,10 +87,11 @@ function drawFloor(context){
     context.clearRect(0, 0, canvas.width, canvas.height);
     
     // Get current theme colors from CSS variables - this will update automatically on theme change
-    const root = document.querySelector(':root');
-    const bgColor = root.style.getPropertyValue('--canvas-bg').trim() || '#f5f5f5';
-    const gridColor = root.style.getPropertyValue('--grid-color').trim() || '#000000';
-    const gridThinColor = root.style.getPropertyValue('--grid-thin').trim() || '#cccccc';
+    // The theme is set via data-theme on <body>, so read the computed values from there
+    const themeStyle = getComputedStyle(document.body);
+    const bgColor = themeStyle.getPropertyValue('--canvas-bg').trim() || '#f5f5f5';
+    const gridColor = themeStyle.getPropertyValue('--grid-color').trim() || '#000000';
+    const gridThinColor = themeStyle.getPropertyValue('--grid-thin').trim() || '#cccccc';
     
     context.fillStyle = bgColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -314,7 +319,7 @@ function drawDiamond(context, x, y, label, color, highlighted) {
     context.lineTo(rectX, rectY + rectHeight);
     context.fill();
 
-    context.font = textsize + "px Cambria";
+    context.font = pointTextsize + "px Cambria";
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillStyle = "white";
